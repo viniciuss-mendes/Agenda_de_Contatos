@@ -149,8 +149,8 @@ class _addState extends State<add> {
                         color: Colors.white
                     ),),
                   onPressed: () async {
-                    if(fotoController.text == null){ fotoController.text = "https://cdn.pixabay.com/photo/2017/01/10/03/54/icon-1968236_960_720.png";}
                     resultadoSalvar = _resultado + complementoController.text;
+                    if(fotoController.text.isEmpty){
                     await db.collection(widget.nome).doc(nomeController.text).set
                       ({'nomeId' : nomeController.text,
                       'nome': nomeController.text,
@@ -159,7 +159,18 @@ class _addState extends State<add> {
                       'endereço':resultadoSalvar,
                       'CEP':CEPController.text,
                       'excluido': false,
-                      'foto' : fotoController.text});
+                      'foto' : "https://cdn.pixabay.com/photo/2017/01/10/03/54/icon-1968236_960_720.png"});}
+                    else {
+                      await db.collection(widget.nome).doc(nomeController.text).set
+                        ({'nomeId' : nomeController.text,
+                        'nome': nomeController.text,
+                        'telefone': telefoneController.text,
+                        'email':emailController.text,
+                        'endereço':resultadoSalvar,
+                        'CEP':CEPController.text,
+                        'excluido': false,
+                        'foto' : fotoController.text});
+                    };
                     Navigator.of(context).pop();
                   }
               ),

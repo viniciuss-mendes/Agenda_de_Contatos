@@ -53,6 +53,7 @@ class HomeState extends State<Home> {
                     child: ListTile(
                       leading: CircleAvatar(
                         radius: 25,
+                        backgroundColor: Colors.blueAccent,
                         backgroundImage: NetworkImage(item['foto']),
 
                       ),

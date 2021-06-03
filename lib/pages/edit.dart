@@ -104,7 +104,7 @@ class _editState extends State<edit> {
                   color: Colors.black,
                 ),
                 decoration: InputDecoration(
-                    labelText: "Insira a URL de uma foto",
+                    labelText: "Editar foto do contato",
                     hintText: "Informe a URL válida da foto do contato"
                 ),
                 controller: fotoController
@@ -160,14 +160,27 @@ class _editState extends State<edit> {
                     ),),
                   onPressed: () async {
                     resultadoSalvar = _resultado + complementoController.text;
-                    await db.collection(widget.colecao).doc(widget.nomeID).update
-                      ({'nome': nomeController.text,
-                      'telefone': telefoneController.text,
-                      'email':emailController.text,
-                      'endereço':resultadoSalvar,
-                      'CEP':CEPController.text,
-                      'excluido': false,
-                      'foto' : fotoController} );
+                    if(fotoController.text.isEmpty){
+                      await db.collection(widget.colecao).doc(widget.nomeID).update
+                        ({'nomeId' : nomeController.text,
+                        'nome': nomeController.text,
+                        'telefone': telefoneController.text,
+                        'email':emailController.text,
+                        'endereço':resultadoSalvar,
+                        'CEP':CEPController.text,
+                        'excluido': false,
+                        'foto' : "https://cdn.pixabay.com/photo/2017/01/10/03/54/icon-1968236_960_720.png"});}
+                    else {
+                      await db.collection(widget.colecao).doc(widget.nomeID).update
+                        ({'nomeId' : nomeController.text,
+                        'nome': nomeController.text,
+                        'telefone': telefoneController.text,
+                        'email':emailController.text,
+                        'endereço':resultadoSalvar,
+                        'CEP':CEPController.text,
+                        'excluido': false,
+                        'foto' : fotoController.text});
+                    };
                     Navigator.push(
                       context,
                       MaterialPageRoute(
