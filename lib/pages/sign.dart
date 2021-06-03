@@ -81,7 +81,7 @@ class _signState extends State<sign> {
                       return;
                     }
                     else{
-                      await db.collection("usuarios").add({
+                      await db.collection(_controllerLogin.text).add({
                         'usuario': _controllerLogin.text,
                         'senha':_controllerSenha.text
                       });

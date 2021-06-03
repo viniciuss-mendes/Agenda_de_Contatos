@@ -1,37 +1,32 @@
 import 'package:agenda_de_contatos/pages/add.dart';
 import 'package:agenda_de_contatos/pages/edit.dart';
+import 'package:agenda_de_contatos/pages/login.dart';
+import 'package:agenda_de_contatos/pages/viewContact.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Home extends StatefulWidget {
   static String tag = '/home';
+  String nome;
+  Home(this.nome);
   @override
   HomeState createState() => HomeState();
-
-  contactToEdit(var contact){
-    return contact;
-  }
 }
 
 class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-      var nomeController = TextEditingController();
-      var telefoneController = TextEditingController();
-      var emailController = TextEditingController();
-      var enderecoController = TextEditingController();
-      var CEPController = TextEditingController();
+      var pesquisaController = TextEditingController();
       FirebaseFirestore db = FirebaseFirestore.instance;
-      var snap = db.collection("usuarios").doc("EIcCwwQ8ZNqiPjRpIEJP").collection("contatos").where('excluido', isEqualTo: false).snapshots();
-      Home home = Home();
-
+      var snap = db.collection(widget.nome).where('excluido', isEqualTo: false).snapshots();
 
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text("Agenda de Contatos"),
         ),
+
         body: StreamBuilder(
           stream: snap,
           builder: (
@@ -46,7 +41,7 @@ class HomeState extends State<Home> {
                     key: Key(item.id),
                     onDismissed: (direction) {
                       setState(() async {
-                        await db.collection("usuarios").doc("EIcCwwQ8ZNqiPjRpIEJP").collection("contatos").doc(item.id).delete();
+                        await db.collection(widget.nome).doc(item.id).delete();
                       });
                       },
                     direction: DismissDirection.endToStart,
@@ -56,22 +51,33 @@ class HomeState extends State<Home> {
                       child: Icon(Icons.delete, color: Colors.white)
                     ),
                     child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(item['foto']),
+
+                      ),
                       title: Text(item['nome']),
                       subtitle: Text(item['telefone']),
                       trailing: TextButton.icon(
-                        icon: Icon(Icons.edit, size: 18),
+                        icon: Icon(Icons.pages, size: 18, color: Colors.black38),
                         label: Text(''),
                         onPressed: (){
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => edit()
+                                builder: (context) => view(widget.nome,
+                                                            item['nomeId'],
+                                                            item['nome'],
+                                                            item['CEP'],
+                                                            item['telefone'],
+                                                            item['email'],
+                                                            item['endereço'])
                             ),
                           );
-                              }
-                          ),
+                        }
+                        ),
                       ),
-                    );
+                );
               },
             );
           },
@@ -81,7 +87,7 @@ class HomeState extends State<Home> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => add()
+                  builder: (context) => add(widget.nome)
               ),
             );
           },

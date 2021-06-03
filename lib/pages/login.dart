@@ -1,3 +1,4 @@
+import 'package:agenda_de_contatos/pages/add.dart';
 import 'package:agenda_de_contatos/pages/sign.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_de_contatos/pages/home_page.dart';
@@ -5,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class login extends StatefulWidget {
   static String tag = '/login';
+  String nome = "";
   @override
   _loginState createState() => _loginState();
 }
@@ -18,13 +20,17 @@ class _loginState extends State<login> {
     try {
       FirebaseFirestore db = FirebaseFirestore.instance;
 
-      var snap = await db.collection("usuarios").where('usuario', isEqualTo: _controllerLogin.text).where('senha', isEqualTo: _controllerSenha.text).get();
-
+      var snap = await db.collection(_controllerLogin.text).where('usuario', isEqualTo: _controllerLogin.text).where('senha', isEqualTo: _controllerSenha.text).get();
+      setState(() {
+          String nome = _controllerLogin.text;
+          Navigator.push(context, MaterialPageRoute(builder:(context) => add(nome)));
+          Navigator.push(context, MaterialPageRoute(builder:(context) => Home(nome)));
+      });
       if (snap.size > 0)  {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Home()
+              builder: (context) => Home(nome)
           ),
         );
       }

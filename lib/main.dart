@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: login.tag,
       routes: {
-        Home.tag: (context) => Home(),
+        Home.tag: (context) => Home(""),
         login.tag: (context) => login(),
         sign.tag: (context) => sign()
       },  // routes
